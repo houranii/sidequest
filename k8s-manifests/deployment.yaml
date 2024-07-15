@@ -14,9 +14,37 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: your-docker-image:latest
+        image: docker-image:latest
         ports:
         - containerPort: 5000
         env:
         - name: REDIS_HOST
           value: redis
+        securityContext:
+          runAsUser: 1000                  
+          runAsGroup: 3000
+          fsGroup: 2000
+          readOnlyRootFilesystem: true     
+          allowPrivilegeEscalation: false  
+          capabilities:
+            drop:
+            - ALL
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app
+spec:
+  selector:
+    app: flask-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
