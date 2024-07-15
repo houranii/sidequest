@@ -42,14 +42,15 @@ jobs:
     - name: Run tests with coverage
       run: |
         source venv/bin/activate
-        pytest --cov=src tests/
+        pytest --cov=src --cov-report=xml tests/
       continue-on-error: true
-
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4.0.1
+  
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
       with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        fail_ci_if_error: true
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
