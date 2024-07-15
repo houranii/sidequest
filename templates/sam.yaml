@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Resources:
+  FlaskAppFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: wsgi.handler
+      Runtime: python3.9
+      CodeUri: .
+      MemorySize: 128
+      Timeout: 30
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Environment:
+        Variables:
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
+  FlaskAppApi:
+    Type: 'AWS::Serverless::Api'
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        swagger: 2.0
+        info:
+          title: Flask App API
+        paths:
+          /hello/{username}:
+            put:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                uri:
+                  Fn::Sub:
+                    - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FlaskAppFunction.Arn}/invocations
+                    - {}
+                type: aws_proxy
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                uri:
+                  Fn::Sub:
+                    - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FlaskAppFunction.Arn}/invocations
+                    - {}
+                type: aws_proxy
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value:
+      Fn::Sub: https://${FlaskAppApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/{username}
