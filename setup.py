@@ -6,7 +6,7 @@ setup(
     description='A Flask application for handling user birthdays',
     author='Ahmad Hourani',
     author_email='ahmed.hourani@gmail.com',
-    url='https://github.com/houranii/hometask_rev',
+    url='https://github.com/houranii/sidequest',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -21,6 +21,8 @@ setup(
         'test': [
             'pytest>=6.0',
             'pytest-cov>=2.10',
+            'unittest2',
+            'mock>=4.0',
         ],
     },
     classifiers=[
