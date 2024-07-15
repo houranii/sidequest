@@ -1,6 +1,0 @@
-setup.py
-hometask_rev.egg-info/PKG-INFO
-hometask_rev.egg-info/SOURCES.txt
-hometask_rev.egg-info/dependency_links.txt
-hometask_rev.egg-info/requires.txt
-hometask_rev.egg-info/top_level.txt
